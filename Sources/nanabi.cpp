@@ -12,7 +12,7 @@ Nanabi::Nanabi ( int nb_players )
     init_game();
 }
 
-bool Nanabi::check_arg ( int nb_players )
+bool Nanabi::check_arg(int nb_players) const
 {
     if ( nb_players < 2 || nb_players > 5 )
         return -1;
@@ -61,25 +61,66 @@ bool Nanabi::play ( play_type t, int id, int value, int player )
     default :
         legal_action = false;
     }
+    if ( legal_action )
+        increase_turn();
     return legal_action;
 }
 
 bool Nanabi::do_play_clue(int action, int value, int player)
 {
-    if ( action == 0 ) { // color
-        // go to function play clue color
-    } else if ( action == 1 ) { // number
-        // go to function play clue number
+    if ( player < 0 || player > nb_players )
+        return false;
+    if ( nb_clue_tokens <= 0)
+        return false;
+
+    if ( action == 0 )
+    { // color
+       if ( value < 1 || value > max_color - 1)
+           return false;
+       nb_clue_tokens--;
+    }
+    else if ( action == 1 )
+    { // number
+       if ( value < 1 || value > 5)
+           return false;
+       nb_clue_tokens--;
+    }
+    else
+    {
+        return false;
     }
     return true;
 }
+
 bool Nanabi::do_play_waste(int card_id)
 {
+    if ( card_in_vect(card_id, &players_hand[player_turn]) )
+        return false;
+    // move card
     return true;
 }
 bool Nanabi::do_play_board(int card_id)
 {
+    if ( card_in_vect(card_id, &players_hand[player_turn]) )
+        return false;
+    if ( true ) // check if can play card
+        nb_fuse_tokens--;
+    // move card
     return true;
 }
 
+bool Nanabi::card_in_vect(int card_id, std::vector<Card *>* v) const
+{
+    for(auto const& card: *v)
+    {
+        if (card->get_id() == card_id )
+            return true;
+    }
+    return false;
+}
+
+void Nanabi::increase_turn()
+{
+    player_turn = (player_turn + 1) % nb_players;
+}
 

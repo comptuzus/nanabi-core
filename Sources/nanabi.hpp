@@ -21,23 +21,25 @@ class Nanabi
 public:
     Nanabi (int nb_players);
     ~Nanabi();
-    const std::vector<Card*> * const get_hand(int player_id) { return &players_hand[player_id]; };
+    const std::vector<Card*> * get_hand(int player_id) const { return &players_hand[player_id]; };
     int get_clue_tokens(void) const { return nb_clue_tokens; };
     int get_fuse_tokens(void) const { return nb_fuse_tokens; };
     int get_player_turn(void) const { return player_turn; };
-    const std::vector<Card*> * const get_stack(void) { return &stack; };
-    const std::vector<Card*> * const get_throw(void) { return &waste; };
-    const std::vector<Card*> * const get_board(void) { return &board; };
+    const std::vector<Card*> * get_stack(void) const { return &stack; };
+    const std::vector<Card*> * get_throw(void) const { return &waste; };
+    const std::vector<Card*> * get_board(void) const { return &board; };
 
     // player is only use for play_clue
     bool play(play_type t, int id, int value, int player);
 
 private:
     void init_game();
-    bool check_arg(int nb_players);
+    bool check_arg(int nb_players) const;
     bool do_play_clue(int action, int value, int player);
     bool do_play_waste(int card_id);
     bool do_play_board(int card_id);
+    bool card_in_vect(int card_id, std::vector<Card*> * v) const;
+    void increase_turn(void);
 
     int nb_players;
     int player_turn;
