@@ -96,16 +96,20 @@ bool Nanabi::do_play_waste(int card_id)
 {
     if ( card_in_vect(card_id, &players_hand[player_turn]) )
         return false;
-    // move card
+    move_card(card_id, &players_hand[player_turn], &waste);
     return true;
 }
 bool Nanabi::do_play_board(int card_id)
 {
-    if ( card_in_vect(card_id, &players_hand[player_turn]) )
+    Card * c = get_card_in_vect(card_id, &players_hand[player_turn]);
+    if ( c == NULL )
         return false;
-    if ( true ) // check if can play card
+    if ( !check_valid_action(c) ) // check if can play card
+    {
         nb_fuse_tokens--;
-    // move card
+        move_card(c->get_id(), &players_hand[player_turn], &waste);
+    }
+        move_card(c->get_id(), &players_hand[player_turn], &board);
     return true;
 }
 
@@ -124,3 +128,36 @@ void Nanabi::increase_turn()
     player_turn = (player_turn + 1) % nb_players;
 }
 
+bool Nanabi::check_valid_action(Card * c) const
+{
+    int color = c->get_color();
+    int value = c->get_value();
+    for(auto const& card: board)
+    {
+        if(card->get_color() == color)
+        {
+            if(value > 1)
+            {
+                if(card->get_value() == value - 1)
+                    return false;
+            }
+            if(card->get_value() == value)
+                return false;
+        }
+    }
+    return true;
+}
+
+Card * Nanabi::get_card_in_vect(int card_id, std::vector<Card *>* v) const
+{
+    for(auto const& card: *v)
+    {
+        if (card->get_id() == card_id )
+            return card;
+    }
+    return NULL;
+}
+
+void Nanabi::move_card(int card_id, std::vector<Card *>* src, std::vector<Card *>*)
+{
+}

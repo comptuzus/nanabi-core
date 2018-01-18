@@ -39,7 +39,10 @@ private:
     bool do_play_waste(int card_id);
     bool do_play_board(int card_id);
     bool card_in_vect(int card_id, std::vector<Card*> * v) const;
+    Card * get_card_in_vect(int card_id, std::vector<Card*> * v) const;
+    bool check_valid_action(Card * c) const;
     void increase_turn(void);
+    void move_card(int card_id, std::vector<Card*> * src, std::vector<Card*> * dst);
 
     int nb_players;
     int player_turn;
