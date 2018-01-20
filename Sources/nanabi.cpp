@@ -158,6 +158,17 @@ Card * Nanabi::get_card_in_vect(int card_id, std::vector<Card *>* v) const
     return NULL;
 }
 
-void Nanabi::move_card(int card_id, std::vector<Card *>* src, std::vector<Card *>*)
+/**
+ * Only call this method if you check the card is correctly in src vector
+ **/
+void Nanabi::move_card(int card_id, std::vector<Card *>* src, std::vector<Card *>* dst)
 {
+    for(std::vector<Card *>::size_type i = 0; i < src->size(); i++)
+    {
+        if (src->at(i)->get_id() == card_id )
+        {
+            dst->push_back(src->at(i));
+            src->erase(src->begin() + i);
+        }
+    }
 }
