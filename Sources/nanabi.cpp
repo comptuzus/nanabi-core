@@ -68,7 +68,7 @@ bool Nanabi::play ( play_type t, int id, int value, int player )
 
 bool Nanabi::do_play_clue(int action, int value, int player)
 {
-    if ( player < 0 || player > nb_players )
+    if ( player < 0 || player >= nb_players )
         return false;
     if ( nb_clue_tokens <= 0)
         return false;
@@ -97,6 +97,8 @@ bool Nanabi::do_play_waste(int card_id)
     if ( card_in_vect(card_id, &players_hand[player_turn]) )
         return false;
     move_card(card_id, &players_hand[player_turn], &waste);
+    players_hand[player_turn].push_back ( stack.back() );
+    stack.pop_back();
     return true;
 }
 bool Nanabi::do_play_board(int card_id)
@@ -109,7 +111,12 @@ bool Nanabi::do_play_board(int card_id)
         nb_fuse_tokens--;
         move_card(c->get_id(), &players_hand[player_turn], &waste);
     }
+    else
+    {
         move_card(c->get_id(), &players_hand[player_turn], &board);
+    }
+    players_hand[player_turn].push_back ( stack.back() );
+    stack.pop_back();
     return true;
 }
 
